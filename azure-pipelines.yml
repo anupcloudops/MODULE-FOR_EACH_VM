@@ -19,7 +19,7 @@ steps:
   inputs:
     provider: 'azurerm'
     command: 'init'
-    workingDirectory: '$(System.DefaultWorkingDirectory)/_temp/3b21447e-4987-4e1f-b4d5-88dd2d59fa9c.ps1'
+    workingDirectory: '$(System.DefaultWorkingDirectory)env/dev'
     backendAzureRmUseCliFlagsForAuthentication: true
     backendAzureRmUseIdTokenGeneration: true
     backendServiceArm: 'svc'
