@@ -23,3 +23,7 @@ steps:
     backendAzureRmStorageAccountName: 'pipelinekeliye'
     backendAzureRmContainerName: 'pipestorage'
     backendAzureRmKey: 'devprod.tfstate'
+- task: PowerShell@2
+  inputs:
+    targetType: 'inline'
+    script: 'pwd'
