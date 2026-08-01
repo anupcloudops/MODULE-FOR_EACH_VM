@@ -5,12 +5,7 @@ terraform {
         version = "4.70.0"
     }
   }
-  backend "azurerm" {
-    resource_group_name  = "for-backend"
-    storage_account_name = "pipelinekeliye"
-    container_name       = "pipestorage"
-    key                  = "dev.tfstate"
-  }
+
 }
 provider "azurerm" {
     features {}
