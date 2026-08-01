@@ -11,6 +11,7 @@ resource_group_name = "for-backend"
     container_name       = "pipestorage"                               
     key                  = "pt.tfstate"                
 }
+}
 provider "azurerm" {
     features {}
     subscription_id = "05dbb74f-6152-4a1d-a1fd-c49be5c3fd99"
