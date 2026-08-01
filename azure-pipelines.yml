@@ -19,7 +19,7 @@ steps:
   inputs:
     provider: 'azurerm'
     command: 'init'
-    workingDirectory: '$(Build.SourceDirectory)env/dev'
+    workingDirectory: '/home/anup-mandal/Downloads/vsts-agent-linux-x64-5.276.0 (2)/_work/3/s/env/dev'
     backendAzureRmUseCliFlagsForAuthentication: true
     backendAzureRmUseIdTokenGeneration: true
     backendServiceArm: 'svc'
