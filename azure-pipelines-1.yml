@@ -8,6 +8,16 @@ pool: asr
 variables:
   work_dir: '$(System.DefaultWorkingDirectory)/env/dev'
 
+parameters:
+- name: test_parameter
+  displayName: VALID
+  type: string
+  values:
+    - true
+    - false
+
+
+
 jobs:
   - job: terraforminstall
     displayName: install
@@ -20,6 +30,7 @@ jobs:
   
   - job: terraforminit
     dependsOn: terraforminstall
+    condition: eq(${{ parameters.testparameter }}, 'true')
     displayName: init
     pool: asr
     steps:
@@ -34,8 +45,8 @@ jobs:
         backendAzureRmContainerName: 'pipestorage'
         backendAzureRmKey: 'ptr.tfstate'
 
-  - job: terraform_init_pan
-    displayName: terradorm_pan
+  - job: terraform_init_plan
+    displayName: terradorm_paln
     pool: asr
     steps:
     - task: TerraformTask@5
