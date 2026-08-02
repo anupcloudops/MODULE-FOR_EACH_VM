@@ -11,6 +11,7 @@ variables:
 parameters:
 - name: test_parameter
   displayName: VALID
+  default: 'true'
   type: string
   values:
     - true
@@ -30,7 +31,7 @@ jobs:
   
   - job: terraforminit
     dependsOn: terraforminstall
-    condition: eq(${{ parameters.testparameter }}, 'true')
+    condition: eq(${{ parameters.test_parameter }}, 'true')
     displayName: init
     pool: asr
     steps:
