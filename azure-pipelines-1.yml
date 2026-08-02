@@ -70,6 +70,7 @@ jobs:
 
 
   - job: Terraform_manual
+    dependsOn: terraform_init_plan
     displayName: Manual
     pool: server
     timeoutInMinutes: 1
