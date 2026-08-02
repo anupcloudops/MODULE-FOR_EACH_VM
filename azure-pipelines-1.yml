@@ -2,17 +2,88 @@
 trigger:
 - main
 
+
 pool: asr
 
+variables:
+  work_dir: '$(System.DefaultWorkingDirectory)/env/dev'
 
-steps:
-- task: TerraformTask@5
-  inputs:
-    provider: 'azurerm'
-    command: 'init'
-    workingDirectory: '$(System.DefaultWorkingDirectory)/env/dev'
-    backendServiceArm: 'svc'
-    backendAzureRmResourceGroupName: 'for-backend'
-    backendAzureRmStorageAccountName: 'pipelinekeliye'
-    backendAzureRmContainerName: 'pipestorage'
-    backendAzureRmKey: 'ptyt.tfstate'
+jobs:
+  - job: terraforminstall
+    displayName: install
+    pool: asr
+    steps:
+    - task: TerraformInstaller@1
+      inputs:
+        terraformVersion: 'latest'
+
+  
+  - job: terraforminit
+    dependsOn: terraforminstall
+    displayName: init
+    pool: asr
+    steps:
+    - task: TerraformTask@5
+      inputs:
+        provider: 'azurerm'
+        command: 'init'
+        workingDirectory: $(work_dir)
+        backendServiceArm: 'svc'
+        backendAzureRmResourceGroupName: 'for-backend'
+        backendAzureRmStorageAccountName: 'pipelinekeliye'
+        backendAzureRmContainerName: 'pipestorage'
+        backendAzureRmKey: 'ptr.tfstate'
+
+  - job: terraform_init_pan
+    displayName: terradorm_pan
+    pool: asr
+    steps:
+    - task: TerraformTask@5
+      inputs:
+        provider: 'azurerm'
+        command: 'init'
+        workingDirectory: $(work_dir)
+        backendServiceArm: 'svc'
+        backendAzureRmResourceGroupName: 'for-backend'
+        backendAzureRmStorageAccountName: 'pipelinekeliye'
+        backendAzureRmContainerName: 'pipestorage'
+        backendAzureRmKey: 'ptr.tfstate'
+    - task: TerraformTask@5
+      inputs:
+        provider: 'azurerm'
+        command: 'plan'
+        workingDirectory: $(work_dir)
+        environmentServiceNameAzureRM: 'svc'
+
+
+  - job: Terraform_manual
+    displayName: Manual
+    pool: server
+    steps:
+    - task: ManualValidation@1
+      inputs:
+        notifyUsers: 'approve'
+        approvers: 'anup@vaishalikahakar91outlook.onmicrosoft.com'
+        instructions: 'approve it bro'
+
+  - job: Terraform_apply
+    displayName: Apply
+    dependsOn: Terraform_manual
+    steps:      
+    - task: TerraformTask@5
+      inputs:
+        provider: 'azurerm'
+        command: 'init'
+        workingDirectory: $(work_dir)
+        backendServiceArm: 'svc'
+        backendAzureRmResourceGroupName: 'for-backend'
+        backendAzureRmStorageAccountName: 'pipelinekeliye'
+        backendAzureRmContainerName: 'pipestorage'
+        backendAzureRmKey: 'ptr.tfstate'
+
+    - task: TerraformTask@5
+      inputs:
+        provider: 'azurerm'
+        command: 'apply'
+        workingDirectory: $(work_dir)
+        environmentServiceNameAzureRM: 'svc'
