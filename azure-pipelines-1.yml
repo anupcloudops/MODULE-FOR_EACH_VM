@@ -1,7 +1,7 @@
 
 trigger:
 - main
-
+- feature/*
 
 pool: asr
 
@@ -22,6 +22,7 @@ parameters:
 jobs:
   - job: terraforminstall
     displayName: install
+    condition: eq(${{ parameters.test_parameter }}, 'true')
     pool: asr
     steps:
     - task: TerraformInstaller@1
@@ -30,8 +31,8 @@ jobs:
 
   
   - job: terraforminit
-    dependsOn: terraforminstall
-    condition: eq(${{ parameters.test_parameter }}, 'true')
+    #dependsOn: terraforminstall
+    
     displayName: init
     pool: asr
     steps:
