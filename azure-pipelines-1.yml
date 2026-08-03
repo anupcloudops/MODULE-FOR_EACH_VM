@@ -4,6 +4,10 @@ trigger:
 
 pool: asr
 
+variables: 
+  ranjeet: '$(System.DefaultWorkingDirectory)/env/dev'
+  anup_service_connection: 'svc'
+
 stages: 
  - stage: install_stage
    jobs:
@@ -20,9 +24,15 @@ stages:
          inputs:
            provider: 'azurerm'
            command: 'init'
-           workingDirectory: '$(System.DefaultWorkingDirectory)/env/dev'
-           backendServiceArm: 'svc'
+           workingDirectory: $(ranjeet)
+           backendServiceArm: $(anup_service_connection)
            backendAzureRmResourceGroupName: 'for-backend'
            backendAzureRmStorageAccountName: 'pipelinekeliye'
            backendAzureRmContainerName: 'pipestorage'
            backendAzureRmKey: 'pttr.tfstate'
+       - task: TerraformTask@5
+         inputs:
+           provider: 'azurerm'
+           command: 'plan'
+           workingDirectory: $(ranjeet)
+           environmentServiceNameAzureRM: $(anup_service_connection)
