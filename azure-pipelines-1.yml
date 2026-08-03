@@ -5,17 +5,17 @@ trigger:
 pool: asr
 
 variables: 
-  ranjeet: '$(System.DefaultWorkingDirectory)/env/dev'
+  ranjeet: '$(System.DefaultWorkingDirectory)/env/${{parameters.environment}}'
   anup_service_connection: 'svc'
 
 parameters:
- - name: plan_chalana_hai
-   displayName: terraform_plan
-   default: true
+ - name: environment
+   displayName: environment (dev/prod)
+   default: dev
    type: string
    values:
-     - true
-     - false
+     - dev
+     - prod
 
 
 stages: 
@@ -29,7 +29,7 @@ stages:
            terraformVersion: 'latest'
      - job: terraform_init_plan
        dependsOn: terraform_install
-       condition: eq('${{ parameters.plan_chalana_hai }}', 'true')
+       
        displayName: init
        steps:
        - task: TerraformTask@5
