@@ -10,8 +10,8 @@ variables:
 
 parameters:
  - name: environment
-   displayName: environment (dev/prod)
-   default: dev
+   displayName: environment_(dev/prod)
+   default: prod
    type: string
    values:
      - dev
