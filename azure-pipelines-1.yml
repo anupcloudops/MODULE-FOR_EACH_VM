@@ -8,6 +8,16 @@ variables:
   ranjeet: '$(System.DefaultWorkingDirectory)/env/dev'
   anup_service_connection: 'svc'
 
+parameters:
+ - name: plan_chalana_hai
+   displayName: terraform_plan
+   default: true
+   type: string
+   values:
+     - true
+     - false
+
+
 stages: 
  - stage: install_stage
    jobs:
@@ -19,6 +29,7 @@ stages:
            terraformVersion: 'latest'
      - job: terraform_init_plan
        dependsOn: terraform_install
+       condition: eq('${{ parameters.plan_chalana_hai }}', 'true')
        displayName: init
        steps:
        - task: TerraformTask@5
