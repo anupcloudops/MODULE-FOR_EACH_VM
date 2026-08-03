@@ -1,107 +1,28 @@
-
-trigger:
+trigger: 
 - main
-- feature/*
+- features/*
 
 pool: asr
 
-variables:
-  work_dir: '$(System.DefaultWorkingDirectory)/env/dev'
-
-parameters:
-- name: test_parameter
-  displayName: VALID
-  default: 'true'
-  type: string
-  values:
-    - true
-    - false
-
-
-
-jobs:
-  - job: terraforminstall
-    displayName: install
-    condition: eq(${{ parameters.test_parameter }}, 'true')
-    pool: asr
-    steps:
-    - task: TerraformInstaller@1
-      inputs:
-        terraformVersion: 'latest'
-
-  
-  - job: terraforminit
-    #dependsOn: terraforminstall
-    
-    displayName: init
-    pool: asr
-    steps:
-    - task: TerraformTask@5
-      inputs:
-        provider: 'azurerm'
-        command: 'init'
-        workingDirectory: $(work_dir)
-        backendServiceArm: 'svc'
-        backendAzureRmResourceGroupName: 'for-backend'
-        backendAzureRmStorageAccountName: 'pipelinekeliye'
-        backendAzureRmContainerName: 'pipestorage'
-        backendAzureRmKey: 'ptr.tfstate'
-
-  - job: terraform_init_plan
-    displayName: terradorm_paln
-    pool: asr
-    steps:
-    - task: TerraformTask@5
-      inputs:
-        provider: 'azurerm'
-        command: 'init'
-        workingDirectory: $(work_dir)
-        backendServiceArm: 'svc'
-        backendAzureRmResourceGroupName: 'for-backend'
-        backendAzureRmStorageAccountName: 'pipelinekeliye'
-        backendAzureRmContainerName: 'pipestorage'
-        backendAzureRmKey: 'ptr.tfstate'
-    - task: TerraformTask@5
-      inputs:
-        provider: 'azurerm'
-        command: 'plan'
-        workingDirectory: $(work_dir)
-        environmentServiceNameAzureRM: 'svc'
-
-
-  - job: Terraform_manual
-    dependsOn: terraform_init_plan
-    displayName: Manual
-    pool: server
-    timeoutInMinutes: 1
-    steps:
-    - task: ManualValidation@1
-      inputs:
-      
-        notifyUsers: 'approve'
-        approvers: 'anup@vaishalikahakar91outlook.onmicrosoft.com'
-        instructions: 'approve it bro'
-        onTimeout: reject
-
-  - job: Terraform_apply
-    displayName: Apply
-    dependsOn: Terraform_manual
-    condition: and(succeeded('Terraform_manual'),eq(variables['Build.SourceBranch'], 'refs/heads/main'))
-    steps:      
-    - task: TerraformTask@5
-      inputs:
-        provider: 'azurerm'
-        command: 'init'
-        workingDirectory: $(work_dir)
-        backendServiceArm: 'svc'
-        backendAzureRmResourceGroupName: 'for-backend'
-        backendAzureRmStorageAccountName: 'pipelinekeliye'
-        backendAzureRmContainerName: 'pipestorage'
-        backendAzureRmKey: 'ptr.tfstate'
-
-    - task: TerraformTask@5
-      inputs:
-        provider: 'azurerm'
-        command: 'apply'
-        workingDirectory: $(work_dir)
-        environmentServiceNameAzureRM: 'svc'
+stages: 
+ - stage: install_stage
+   jobs:
+     - job: terraform_install
+       displayName: install
+       steps:
+       - task: TerraformInstaller@1
+         inputs:
+           terraformVersion: 'latest'
+     - job: terraform_init
+       displayName: init
+       steps:
+       - task: TerraformTask@5
+         inputs:
+           provider: 'azurerm'
+           command: 'init'
+           workingDirectory: '$(System.DefaultWorkingDirectory)/env/dev'
+           backendServiceArm: 'svc'
+           backendAzureRmResourceGroupName: 'for-backend'
+           backendAzureRmStorageAccountName: 'pipelinekeliye'
+           backendAzureRmContainerName: 'pipestorage'
+           backendAzureRmKey: 'pttr.tfstate'
