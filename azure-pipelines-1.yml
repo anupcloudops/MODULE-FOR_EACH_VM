@@ -41,4 +41,10 @@ stages:
        displayName: pr
        pool: server
        dependsOn: terraform_init
+       timeoutInMinutes: 1
        condition: succeeded('terraform_init')
+       steps:
+       - task: ManualValidation@1
+         inputs:
+           notifyUsers: 'Ranjeet'
+           approvers: 'anup@vaishalikahakar91outlook.onmicrosoft.com'
