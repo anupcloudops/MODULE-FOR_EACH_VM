@@ -17,7 +17,8 @@ stages:
        - task: TerraformInstaller@1
          inputs:
            terraformVersion: 'latest'
-     - job: terraform_init
+     - job: terraform_init_plan
+       dependsOn: terraform_install
        displayName: init
        steps:
        - task: TerraformTask@5
@@ -38,11 +39,11 @@ stages:
            environmentServiceNameAzureRM: $(anup_service_connection)
 
      - job: Manual_validation
-       displayName: pr
+       displayName: Manual_validation
        pool: server
-       dependsOn: terraform_init
+       dependsOn: terraform_init_plan
        timeoutInMinutes: 1
-       condition: succeeded('terraform_init')
+       condition: succeeded('terraform_init_plan')
        steps:
        - task: ManualValidation@1
          inputs:
