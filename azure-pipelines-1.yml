@@ -86,7 +86,7 @@ jobs:
   - job: Terraform_apply
     displayName: Apply
     dependsOn: Terraform_manual
-    condition: succeeded ('Terraform_manual')
+    condition: and(succeeded('Terraform_manual'),eq(variables['Build.SourceBranch'], 'refs/heads/main'))
     steps:      
     - task: TerraformTask@5
       inputs:
