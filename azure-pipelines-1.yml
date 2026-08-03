@@ -36,3 +36,9 @@ stages:
            command: 'plan'
            workingDirectory: $(ranjeet)
            environmentServiceNameAzureRM: $(anup_service_connection)
+
+     - job: Manual_validation
+       displayName: pr
+       pool: server
+       dependsOn: terraform_init
+       condition: succeeded('terraform_init')
