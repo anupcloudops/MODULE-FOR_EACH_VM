@@ -48,3 +48,24 @@ stages:
          inputs:
            notifyUsers: 'Ranjeet'
            approvers: 'anup@vaishalikahakar91outlook.onmicrosoft.com'
+
+     - job: Terraform_Apply
+       displayName: apply
+       dependsOn: Manual_validation
+       steps:
+       - task: TerraformTask@5
+         inputs:
+           provider: 'azurerm'
+           command: 'init'
+           workingDirectory: $(ranjeet)
+           backendServiceArm: $(anup_service_connection)
+           backendAzureRmResourceGroupName: 'for-backend'
+           backendAzureRmStorageAccountName: 'pipelinekeliye'
+           backendAzureRmContainerName: 'pipestorage'
+           backendAzureRmKey: 'pttr.tfstate'
+       - task: TerraformTask@5
+         inputs:
+           provider: 'azurerm'
+           command: 'apply'
+           workingDirectory: $(ranjeet)
+           environmentServiceNameAzureRM: $(anup_service_connection)
